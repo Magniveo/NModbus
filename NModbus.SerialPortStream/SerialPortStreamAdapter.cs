@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NModbus.IO;
 
 namespace NModbus.SerialPortStream
@@ -39,6 +40,13 @@ namespace NModbus.SerialPortStream
 
             if (result == 0)
                 throw new TimeoutException();
+
+            return result;
+        }
+
+        public Task<int> ReadAsync(byte[] buffer, int offset, int count)
+        {
+            var result = _serialPortStream.ReadAsync(buffer, offset, count);
 
             return result;
         }
