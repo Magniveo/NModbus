@@ -1,22 +1,22 @@
 ﻿using NModbus.Device.MessageHandlers;
-using Xunit;
+
 
 namespace NModbus.UnitTests.Device.MessageHandlers
 {
     public class WriteFileRecordServiceFixture
     {
-        [Fact]
+        [Test()]
         public void GetRtuRequestBytesToRead()
         {
             var service = new WriteFileRecordService();
-            Assert.Equal(4, service.GetRtuRequestBytesToRead(new byte[] { 1, 21, 3 }));
+            Assert.AreEqual(4, service.GetRtuRequestBytesToRead(new byte[] { 1, 21, 3 }));
         }
 
-        [Fact]
+        [Test()]
         public void GetRtuResponseBytesToRead()
         {
             var service = new WriteFileRecordService();
-            Assert.Equal(45, service.GetRtuResponseBytesToRead(new byte[] { 1, 21, 44 }));
+            Assert.AreEqual(45, service.GetRtuResponseBytesToRead(new byte[] { 1, 21, 44 }));
         }
     }
 }

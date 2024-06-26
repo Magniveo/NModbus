@@ -4,7 +4,7 @@ using Moq;
 using NModbus.IO;
 using NModbus.Logging;
 using NModbus.Message;
-using Xunit;
+
 
 namespace NModbus.UnitTests.IO
 {
@@ -12,7 +12,7 @@ namespace NModbus.UnitTests.IO
     {
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 
-        [Fact]
+        [Test()]
         public void BuildMessageFrame()
         {
             byte[] expected = { 58, 48, 50, 48, 49, 48, 48, 48, 48, 48, 48, 48, 49, 70, 67, 13, 10 };
@@ -20,10 +20,10 @@ namespace NModbus.UnitTests.IO
             var actual = new ModbusAsciiTransport(StreamResource, new ModbusFactory(), NullModbusLogger.Instance)
                 .BuildMessageFrame(request);
 
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
-        [Fact]
+        [Test()]
         public void ReadRequestResponse()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -39,11 +39,11 @@ namespace NModbus.UnitTests.IO
                     return 1;
                 });
 
-            Assert.Equal(new byte[] { 17, 1, 0, 19, 0, 37, 182 }, transport.ReadRequestResponse());
+            Assert.AreEqual(new byte[] { 17, 1, 0, 19, 0, 37, 182 }, transport.ReadRequestResponse());
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ReadRequestResponseNotEnoughBytes()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -63,7 +63,7 @@ namespace NModbus.UnitTests.IO
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ChecksumsMatchSucceed()
         {
             var transport = new ModbusAsciiTransport(StreamResource, new ModbusFactory(), NullModbusLogger.Instance);
@@ -73,7 +73,7 @@ namespace NModbus.UnitTests.IO
             Assert.True(transport.ChecksumsMatch(message, frame));
         }
 
-        [Fact]
+        [Test()]
         public void ChecksumsMatchFail()
         {
             var transport = new ModbusAsciiTransport(StreamResource, new ModbusFactory(), NullModbusLogger.Instance);

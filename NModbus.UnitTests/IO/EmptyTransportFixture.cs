@@ -1,13 +1,13 @@
 ﻿using System;
 using NModbus.IO;
 using NModbus.Message;
-using Xunit;
+
 
 namespace NModbus.UnitTests.IO
 {
     public static class EmptyTransportFixture
     {
-        [Fact]
+        [Test()]
         public static void Negative()
         {
             var transport = new EmptyTransport(new ModbusFactory());

@@ -1,169 +1,169 @@
 ﻿using System;
 using NModbus.Message;
 using NModbus.Utility;
-using Xunit;
+
 
 namespace NModbus.UnitTests.Utility
 {
     public class ModbusUtilityFixture
     {
-        [Fact]
+        [Test()]
         public void GetAsciiBytesFromEmpty()
         {
-            Assert.Equal(new byte[] { }, ModbusUtility.GetAsciiBytes(new byte[] { }));
-            Assert.Equal(new byte[] { }, ModbusUtility.GetAsciiBytes(new ushort[] { }));
+            Assert.AreEqual(new byte[] { }, ModbusUtility.GetAsciiBytes(new byte[] { }));
+            Assert.AreEqual(new byte[] { }, ModbusUtility.GetAsciiBytes(new ushort[] { }));
         }
 
-        [Fact]
+        [Test()]
         public void GetAsciiBytesFromBytes()
         {
             byte[] buf = { 2, 5 };
             byte[] expectedResult = { 48, 50, 48, 53 };
             byte[] result = ModbusUtility.GetAsciiBytes(buf);
-            Assert.Equal(expectedResult, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
-        [Fact]
+        [Test()]
         public void GetAsciiBytesFromUshorts()
         {
             ushort[] buf = { 300, 400 };
             byte[] expectedResult = { 48, 49, 50, 67, 48, 49, 57, 48 };
             byte[] result = ModbusUtility.GetAsciiBytes(buf);
-            Assert.Equal(expectedResult, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
-        [Fact]
+        [Test()]
         public void HexToBytes()
         {
-            Assert.Equal(new byte[] { 255 }, ModbusUtility.HexToBytes("FF"));
+            Assert.AreEqual(new byte[] { 255 }, ModbusUtility.HexToBytes("FF"));
         }
 
-        [Fact]
+        [Test()]
         public void HexToBytes2()
         {
-            Assert.Equal(new byte[] { 204, 255 }, ModbusUtility.HexToBytes("CCFF"));
+            Assert.AreEqual(new byte[] { 204, 255 }, ModbusUtility.HexToBytes("CCFF"));
         }
 
-        [Fact]
+        [Test()]
         public void HexToBytesEmpty()
         {
-            Assert.Equal(new byte[] { }, ModbusUtility.HexToBytes(string.Empty));
+            Assert.AreEqual(new byte[] { }, ModbusUtility.HexToBytes(string.Empty));
         }
 
-        [Fact]
+        [Test()]
         public void HexToBytesNull()
         {
             Assert.Throws<ArgumentNullException>(() => ModbusUtility.HexToBytes(null));
         }
 
-        [Fact]
+        [Test()]
         public void HexToBytesOdd()
         {
             Assert.Throws<FormatException>(() => ModbusUtility.HexToBytes("CCF"));
         }
 
-        [Fact]
+        [Test()]
         public void CalculateCrc()
         {
             byte[] result = ModbusUtility.CalculateCrc(new byte[] { 1, 1 });
-            Assert.Equal(new byte[] { 193, 224 }, result);
+            Assert.AreEqual(new byte[] { 193, 224 }, result);
         }
 
-        [Fact]
+        [Test()]
         public void CalculateCrc2()
         {
             byte[] result = ModbusUtility.CalculateCrc(new byte[] { 2, 1, 5, 0 });
-            Assert.Equal(new byte[] { 83, 12 }, result);
+            Assert.AreEqual(new byte[] { 83, 12 }, result);
         }
 
-        [Fact]
+        [Test()]
         public void CalculateCrcEmpty()
         {
-            Assert.Equal(new byte[] { 255, 255 }, ModbusUtility.CalculateCrc(new byte[] { }));
+            Assert.AreEqual(new byte[] { 255, 255 }, ModbusUtility.CalculateCrc(new byte[] { }));
         }
 
-        [Fact]
+        [Test()]
         public void CalculateCrcNull()
         {
             Assert.Throws<ArgumentNullException>(() => ModbusUtility.CalculateCrc(null));
         }
 
-        [Fact]
+        [Test()]
         public void CalculateLrc()
         {
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 1, 1, 10);
-            Assert.Equal(243, ModbusUtility.CalculateLrc(new byte[] { 1, 1, 0, 1, 0, 10 }));
+            Assert.AreEqual(243, ModbusUtility.CalculateLrc(new byte[] { 1, 1, 0, 1, 0, 10 }));
         }
 
-        [Fact]
+        [Test()]
         public void CalculateLrc2()
         {
             // : 02 01 0000 0001 FC
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 2, 0, 1);
-            Assert.Equal(252, ModbusUtility.CalculateLrc(new byte[] { 2, 1, 0, 0, 0, 1 }));
+            Assert.AreEqual(252, ModbusUtility.CalculateLrc(new byte[] { 2, 1, 0, 0, 0, 1 }));
         }
 
-        [Fact]
+        [Test()]
         public void CalculateLrcNull()
         {
             Assert.Throws<ArgumentNullException>(() => ModbusUtility.CalculateLrc(null));
         }
 
-        [Fact]
+        [Test()]
         public void CalculateLrcEmpty()
         {
-            Assert.Equal(0, ModbusUtility.CalculateLrc(new byte[] { }));
+            Assert.AreEqual(0, ModbusUtility.CalculateLrc(new byte[] { }));
         }
 
-        [Fact]
+        [Test()]
         public void NetworkBytesToHostUInt16()
         {
-            Assert.Equal(new ushort[] { 1, 2 }, ModbusUtility.NetworkBytesToHostUInt16(new byte[] { 0, 1, 0, 2 }));
+            Assert.AreEqual(new ushort[] { 1, 2 }, ModbusUtility.NetworkBytesToHostUInt16(new byte[] { 0, 1, 0, 2 }));
         }
 
-        [Fact]
+        [Test()]
         public void NetworkBytesToHostUInt16Null()
         {
             Assert.Throws<ArgumentNullException>(() => ModbusUtility.NetworkBytesToHostUInt16(null));
         }
 
-        [Fact]
+        [Test()]
         public void NetworkBytesToHostUInt16OddNumberOfBytes()
         {
             Assert.Throws<FormatException>(() => ModbusUtility.NetworkBytesToHostUInt16(new byte[] { 1 }));
         }
 
-        [Fact]
+        [Test()]
         public void NetworkBytesToHostUInt16EmptyBytes()
         {
-            Assert.Equal(new ushort[] { }, ModbusUtility.NetworkBytesToHostUInt16(new byte[] { }));
+            Assert.AreEqual(new ushort[] { }, ModbusUtility.NetworkBytesToHostUInt16(new byte[] { }));
         }
 
-        [Fact]
+        [Test()]
         public void GetDouble()
         {
-            Assert.Equal(0.0, ModbusUtility.GetDouble(0, 0, 0, 0));
-            Assert.Equal(1.0, ModbusUtility.GetDouble(16368, 0, 0, 0));
-            Assert.Equal(Math.PI, ModbusUtility.GetDouble(16393, 8699, 21572, 11544));
-            Assert.Equal(500.625, ModbusUtility.GetDouble(16511, 18944, 0, 0));
+            Assert.AreEqual(0.0, ModbusUtility.GetDouble(0, 0, 0, 0));
+            Assert.AreEqual(1.0, ModbusUtility.GetDouble(16368, 0, 0, 0));
+            Assert.AreEqual(Math.PI, ModbusUtility.GetDouble(16393, 8699, 21572, 11544));
+            Assert.AreEqual(500.625, ModbusUtility.GetDouble(16511, 18944, 0, 0));
         }
 
-        [Fact]
+        [Test()]
         public void GetSingle()
         {
-            Assert.Equal(0F, ModbusUtility.GetSingle(0, 0));
-            Assert.Equal(1F, ModbusUtility.GetSingle(16256, 0));
-            Assert.Equal(9999999F, ModbusUtility.GetSingle(19224, 38527));
-            Assert.Equal(500.625F, ModbusUtility.GetSingle(17402, 20480));
+            Assert.AreEqual(0F, ModbusUtility.GetSingle(0, 0));
+            Assert.AreEqual(1F, ModbusUtility.GetSingle(16256, 0));
+            Assert.AreEqual(9999999F, ModbusUtility.GetSingle(19224, 38527));
+            Assert.AreEqual(500.625F, ModbusUtility.GetSingle(17402, 20480));
         }
 
-        [Fact]
+        [Test()]
         public void GetUInt32()
         {
-            Assert.Equal((uint)0, ModbusUtility.GetUInt32(0, 0));
-            Assert.Equal((uint)1, ModbusUtility.GetUInt32(0, 1));
-            Assert.Equal((uint)45, ModbusUtility.GetUInt32(0, 45));
-            Assert.Equal((uint)65536, ModbusUtility.GetUInt32(1, 0));
+            Assert.AreEqual((uint)0, ModbusUtility.GetUInt32(0, 0));
+            Assert.AreEqual((uint)1, ModbusUtility.GetUInt32(0, 1));
+            Assert.AreEqual((uint)45, ModbusUtility.GetUInt32(0, 45));
+            Assert.AreEqual((uint)65536, ModbusUtility.GetUInt32(1, 0));
         }
     }
 }

@@ -7,7 +7,7 @@ using NModbus.Logging;
 using NModbus.Message;
 using NModbus.UnitTests.Message;
 using NModbus.Utility;
-using Xunit;
+
 
 namespace NModbus.UnitTests.IO
 {
@@ -15,7 +15,7 @@ namespace NModbus.UnitTests.IO
     {
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 
-        [Fact]
+        [Test()]
         public void CreateResponse()
         {
             var transport = new ModbusAsciiTransport(StreamResource, new ModbusFactory(), NullModbusLogger.Instance);
@@ -23,11 +23,11 @@ namespace NModbus.UnitTests.IO
             byte lrc = ModbusUtility.CalculateLrc(expectedResponse.MessageFrame);
             var response = transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] { 2, ModbusFunctionCodes.ReadCoils, 1, 129, lrc });
 
-            Assert.IsType<ReadCoilsInputsResponse>(response);
+            Assert.IsInstanceOf<ReadCoilsInputsResponse>(response);
             ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
-        [Fact]
+        [Test()]
         public void CreateResponseErroneousLrc()
         {
             var transport = new ModbusAsciiTransport(StreamResource, new ModbusFactory(), NullModbusLogger.Instance) { CheckFrame = true };
@@ -37,7 +37,7 @@ namespace NModbus.UnitTests.IO
                 () => transport.CreateResponse<ReadCoilsInputsResponse>(frame));
         }
 
-        [Fact]
+        [Test()]
         public void CreateResponseErroneousLrcDoNotCheckFrame()
         {
             var transport = new ModbusAsciiTransport(StreamResource, new ModbusFactory(), NullModbusLogger.Instance) { CheckFrame = false };
@@ -49,7 +49,7 @@ namespace NModbus.UnitTests.IO
         /// When using the serial RTU protocol the beginning of the message could get mangled leading to an unsupported message type.
         /// We want to be sure to try the message again so clear the RX buffer and try again.
         /// </summary>
-        [Fact]
+        [Test()]
         public void UnicastMessage_PurgeReceiveBuffer()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);

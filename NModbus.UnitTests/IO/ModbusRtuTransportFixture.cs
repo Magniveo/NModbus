@@ -7,7 +7,7 @@ using NModbus.IO;
 using NModbus.Logging;
 using NModbus.Message;
 using NModbus.Utility;
-using Xunit;
+
 
 namespace NModbus.UnitTests.IO
 {
@@ -16,57 +16,57 @@ namespace NModbus.UnitTests.IO
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
         private static IModbusFactory Factory = new ModbusFactory();
 
-        [Fact]
+        [Test()]
         public void BuildMessageFrame()
         {
             byte[] message = { 17, ModbusFunctionCodes.ReadCoils, 0, 19, 0, 37, 14, 132 };
             var request = new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 17, 19, 37);
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
 
-            Assert.Equal(message, transport.BuildMessageFrame(request));
+            Assert.AreEqual(message, transport.BuildMessageFrame(request));
         }
 
-        [Fact]
+        [Test()]
         public void ResponseBytesToReadCoils()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x11, 0x01, 0x05, 0xCD, 0x6B, 0xB2, 0x0E, 0x1B };
-            Assert.Equal(6, transport.ResponseBytesToRead(frameStart));
+            Assert.AreEqual(6, transport.ResponseBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void ResponseBytesToReadCoilsNoData()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x11, 0x01, 0x00, 0x00, 0x00 };
-            Assert.Equal(1, transport.ResponseBytesToRead(frameStart));
+            Assert.AreEqual(1, transport.ResponseBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void ResponseBytesToReadWriteCoilsResponse()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x11, 0x0F, 0x00, 0x13, 0x00, 0x0A, 0, 0 };
-            Assert.Equal(4, transport.ResponseBytesToRead(frameStart));
+            Assert.AreEqual(4, transport.ResponseBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void ResponseBytesToReadDiagnostics()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x01, 0x08, 0x00, 0x00 };
-            Assert.Equal(4, transport.ResponseBytesToRead(frameStart));
+            Assert.AreEqual(4, transport.ResponseBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void ResponseBytesToReadSlaveException()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x01, Modbus.ExceptionOffset + 1, 0x01 };
-            Assert.Equal(1, transport.ResponseBytesToRead(frameStart));
+            Assert.AreEqual(1, transport.ResponseBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void ResponseBytesToReadInvalidFunctionCode()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
@@ -74,39 +74,39 @@ namespace NModbus.UnitTests.IO
             Assert.Throws<NotImplementedException>(() => transport.ResponseBytesToRead(frame));
         }
 
-        [Fact]
+        [Test()]
         public void RequestBytesToReadDiagnostics()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frame = { 0x01, 0x08, 0x00, 0x00, 0xA5, 0x37, 0, 0 };
-            Assert.Equal(1, transport.RequestBytesToRead(frame));
+            Assert.AreEqual(1, transport.RequestBytesToRead(frame));
         }
 
-        [Fact]
+        [Test()]
         public void RequestBytesToReadCoils()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x11, 0x01, 0x00, 0x13, 0x00, 0x25 };
-            Assert.Equal(1, transport.RequestBytesToRead(frameStart));
+            Assert.AreEqual(1, transport.RequestBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void RequestBytesToReadWriteCoilsRequest()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x11, 0x0F, 0x00, 0x13, 0x00, 0x0A, 0x02, 0xCD, 0x01 };
-            Assert.Equal(4, transport.RequestBytesToRead(frameStart));
+            Assert.AreEqual(4, transport.RequestBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void RequestBytesToReadWriteMultipleHoldingRegisters()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
             byte[] frameStart = { 0x11, 0x10, 0x00, 0x01, 0x00, 0x02, 0x04 };
-            Assert.Equal(6, transport.RequestBytesToRead(frameStart));
+            Assert.AreEqual(6, transport.RequestBytesToRead(frameStart));
         }
 
-        [Fact]
+        [Test()]
         public void RequestBytesToReadInvalidFunctionCode()
         {
             var transport = new ModbusRtuTransport(StreamResource, Factory, NullModbusLogger.Instance);
@@ -114,7 +114,7 @@ namespace NModbus.UnitTests.IO
             Assert.Throws<NotImplementedException>(() => transport.RequestBytesToRead(frame));
         }
 
-        [Fact]
+        [Test()]
         public void ChecksumsMatchSucceed()
         {
             var factory = new ModbusFactory();
@@ -125,7 +125,7 @@ namespace NModbus.UnitTests.IO
             Assert.True(transport.ChecksumsMatch(message, frame));
         }
 
-        [Fact]
+        [Test()]
         public void ChecksumsMatchFail()
         {
             var factory = new ModbusFactory();
@@ -136,7 +136,7 @@ namespace NModbus.UnitTests.IO
             Assert.False(transport.ChecksumsMatch(message, frame));
         }
 
-        [Fact]
+        [Test()]
         public void ReadResponse()
         {
             var factory = new ModbusFactory();
@@ -147,15 +147,15 @@ namespace NModbus.UnitTests.IO
             mock.Setup(t => t.Read(2)).Returns(new byte[] { 81, 136 });
 
             var response = transport.ReadResponse<ReadCoilsInputsResponse>();
-            Assert.IsType<ReadCoilsInputsResponse>(response);
+            Assert.IsInstanceOf<ReadCoilsInputsResponse>(response);
 
             var expectedResponse = new ReadCoilsInputsResponse(ModbusFunctionCodes.ReadCoils, 1, 1, new DiscreteCollection(false));
-            Assert.Equal(expectedResponse.MessageFrame, response.MessageFrame);
+            Assert.AreEqual(expectedResponse.MessageFrame, response.MessageFrame);
 
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ReadResponseSlaveException()
         {
             var factory = new ModbusFactory();
@@ -172,10 +172,10 @@ namespace NModbus.UnitTests.IO
                 .Returns(new byte[] { crc[1] });
 
             var response = transport.ReadResponse<ReadCoilsInputsResponse>();
-            Assert.IsType<SlaveExceptionResponse>(response);
+            Assert.IsInstanceOf<SlaveExceptionResponse>(response);
 
             var expectedResponse = new SlaveExceptionResponse(0x01, 0x81, 0x02);
-            Assert.Equal(expectedResponse.MessageFrame, response.MessageFrame);
+            Assert.AreEqual(expectedResponse.MessageFrame, response.MessageFrame);
 
             mock.VerifyAll();
         }
@@ -184,7 +184,7 @@ namespace NModbus.UnitTests.IO
         /// We want to throw an IOException for any message w/ an invalid checksum,
         /// this must preceed throwing a SlaveException based on function code > 127
         /// </summary>
-        [Fact]
+        [Test()]
         public void ReadResponseSlaveExceptionWithErroneousLrc()
         {
             var factory = new ModbusFactory();
@@ -207,7 +207,7 @@ namespace NModbus.UnitTests.IO
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ReadRequest()
         {
             var factory = new ModbusFactory();
@@ -220,12 +220,12 @@ namespace NModbus.UnitTests.IO
             mock.Setup(t => t.Read(1))
                 .Returns(new byte[] { 5 });
 
-            Assert.Equal(new byte[] { 1, 1, 1, 0, 1, 0, 0, 5 }, transport.ReadRequest());
+            Assert.AreEqual(new byte[] { 1, 1, 1, 0, 1, 0, 0, 5 }, transport.ReadRequest());
 
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void Read()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -247,7 +247,7 @@ namespace NModbus.UnitTests.IO
             var factory = new ModbusFactory();
 
             ModbusRtuTransport transport = new ModbusRtuTransport(mock.Object, factory, NullModbusLogger.Instance);
-            Assert.Equal(new byte[] { 2, 2, 2, 3, 3 }, transport.Read(5));
+            Assert.AreEqual(new byte[] { 2, 2, 2, 3, 3 }, transport.Read(5));
 
             mock.VerifyAll();
         }

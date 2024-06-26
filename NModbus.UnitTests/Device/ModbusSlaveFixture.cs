@@ -7,7 +7,7 @@
 //using NModbus.Message;
 //using NModbus.UnitTests.Message;
 //using NModbus.Unme.Common;
-//using Xunit;
+//
 
 //namespace NModbus.UnitTests.Device
 //{
@@ -20,7 +20,7 @@
 //            _testDataStore = DataStoreFactory.CreateTestDataStore();
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void ReadDiscretesCoils()
 //        {
 //            ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(ModbusFunctionCodes.ReadCoils, 1, 2,
@@ -29,10 +29,10 @@
 //                ModbusSlave.ReadDiscretes(new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 1, 1, 9), _testDataStore,
 //                    _testDataStore.CoilDiscretes);
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-//            Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
+//            Assert.AreEqual(expectedResponse.ByteCount, response.ByteCount);
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void ReadDiscretesInputs()
 //        {
 //            ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(ModbusFunctionCodes.ReadInputs, 1, 2,
@@ -41,10 +41,10 @@
 //                ModbusSlave.ReadDiscretes(new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadInputs, 1, 1, 9), _testDataStore,
 //                    _testDataStore.InputDiscretes);
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-//            Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
+//            Assert.AreEqual(expectedResponse.ByteCount, response.ByteCount);
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void ReadRegistersHoldingRegisters()
 //        {
 //            ReadHoldingInputRegistersResponse expectedResponse =
@@ -54,10 +54,10 @@
 //                ModbusSlave.ReadRegisters(new ReadHoldingInputRegistersRequest(ModbusFunctionCodes.ReadHoldingRegisters, 1, 0, 6),
 //                    _testDataStore, _testDataStore.HoldingRegisters);
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-//            Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
+//            Assert.AreEqual(expectedResponse.ByteCount, response.ByteCount);
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void ReadRegistersInputRegisters()
 //        {
 //            ReadHoldingInputRegistersResponse expectedResponse =
@@ -67,10 +67,10 @@
 //                ModbusSlave.ReadRegisters(new ReadHoldingInputRegistersRequest(ModbusFunctionCodes.ReadInputRegisters, 1, 0, 6),
 //                    _testDataStore, _testDataStore.InputRegisters);
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-//            Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
+//            Assert.AreEqual(expectedResponse.ByteCount, response.ByteCount);
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void WriteSingleCoil()
 //        {
 //            ushort addressToWrite = 35;
@@ -81,10 +81,10 @@
 //                ModbusSlave.WriteSingleCoil(new WriteSingleCoilRequestResponse(1, addressToWrite, valueToWrite),
 //                    _testDataStore, _testDataStore.CoilDiscretes);
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-//            Assert.Equal(valueToWrite, _testDataStore.CoilDiscretes[addressToWrite + 1]);
+//            Assert.AreEqual(valueToWrite, _testDataStore.CoilDiscretes[addressToWrite + 1]);
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void WriteMultipleCoils()
 //        {
 //            ushort startAddress = 35;
@@ -97,16 +97,16 @@
 //                        new DiscreteCollection(val, val, val, val, val, val, val, val, val, val)), _testDataStore,
 //                    _testDataStore.CoilDiscretes);
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-//            Assert.Equal(new bool[] { val, val, val, val, val, val, val, val, val, val },
+//            Assert.AreEqual(new bool[] { val, val, val, val, val, val, val, val, val, val },
 //                _testDataStore.CoilDiscretes.Slice(startAddress + 1, numberOfPoints).ToArray());
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void WriteSingleRegister()
 //        {
 //            ushort startAddress = 35;
 //            ushort value = 45;
-//            Assert.NotEqual(value, _testDataStore.HoldingRegisters[startAddress - 1]);
+//            Assert.AreNotEqual(value, _testDataStore.HoldingRegisters[startAddress - 1]);
 //            WriteSingleRegisterRequestResponse expectedResponse = new WriteSingleRegisterRequestResponse(1, startAddress,
 //                value);
 //            WriteSingleRegisterRequestResponse response =
@@ -115,12 +115,12 @@
 //            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
 //        }
 
-//        [Fact]
+//        [Test()]
 //        public void WriteMultipleRegisters()
 //        {
 //            ushort startAddress = 35;
 //            ushort[] valuesToWrite = new ushort[] { 1, 2, 3, 4, 5 };
-//            Assert.NotEqual(valuesToWrite,
+//            Assert.AreNotEqual(valuesToWrite,
 //                _testDataStore.HoldingRegisters.Slice(startAddress - 1, valuesToWrite.Length).ToArray());
 //            WriteMultipleRegistersResponse expectedResponse = new WriteMultipleRegistersResponse(1, startAddress,
 //                (ushort)valuesToWrite.Length);
@@ -132,7 +132,7 @@
 //        }
 
 //#if SERIAL
-//        [Fact]
+//        [Test()]
 //        public void ApplyRequest_VerifyModbusRequestReceivedEventIsFired()
 //        {
 //            bool eventFired = false;
@@ -141,7 +141,7 @@
 //            slave.ModbusSlaveRequestReceived += (obj, args) =>
 //            {
 //                eventFired = true;
-//                Assert.Equal(request, args.Message);
+//                Assert.AreEqual(request, args.Message);
 //            };
 
 //            slave.ApplyRequest(request);
@@ -149,7 +149,7 @@
 //        }
 //#endif
 
-//        [Fact]
+//        [Test()]
 //        public void WriteMultipCoils_MakeSureWeDoNotWriteRemainder()
 //        {
 //            0, false initialized data store
@@ -160,7 +160,7 @@
 //            { NumberOfPoints = 2 };
 //            ModbusSlave.WriteMultipleCoils(request, dataStore, dataStore.CoilDiscretes);
 
-//            Assert.Equal(dataStore.CoilDiscretes.Slice(1, 8).ToArray(),
+//            Assert.AreEqual(dataStore.CoilDiscretes.Slice(1, 8).ToArray(),
 //                new[] { true, true, false, false, false, false, false, false });
 //        }
 //    }

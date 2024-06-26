@@ -3,7 +3,7 @@ using System.Linq;
 using Moq;
 using NModbus.Device;
 using NModbus.IO;
-using Xunit;
+
 
 namespace NModbus.UnitTests.Device
 {
@@ -15,35 +15,35 @@ namespace NModbus.UnitTests.Device
 
         private ModbusSerialMaster Master => new ModbusSerialMaster(Transport);
 
-        [Fact]
+        [Test()]
         public void ReadCoils()
         {
             Assert.Throws<ArgumentException>(() => Master.ReadCoils(1, 1, 0));
             Assert.Throws<ArgumentException>(() => Master.ReadCoils(1, 1, 2001));
         }
 
-        [Fact]
+        [Test()]
         public void ReadInputs()
         {
             Assert.Throws<ArgumentException>(() => Master.ReadInputs(1, 1, 0));
             Assert.Throws<ArgumentException>(() => Master.ReadInputs(1, 1, 2001));
         }
 
-        [Fact]
+        [Test()]
         public void ReadHoldingRegisters()
         {
             Assert.Throws<ArgumentException>(() => Master.ReadHoldingRegisters(1, 1, 0));
             Assert.Throws<ArgumentException>(() => Master.ReadHoldingRegisters(1, 1, 126));
         }
 
-        [Fact]
+        [Test()]
         public void ReadInputRegisters()
         {
             Assert.Throws<ArgumentException>(() => Master.ReadInputRegisters(1, 1, 0));
             Assert.Throws<ArgumentException>(() => Master.ReadInputRegisters(1, 1, 126));
         }
 
-        [Fact]
+        [Test()]
         public void WriteMultipleRegisters()
         {
             Assert.Throws<ArgumentNullException>(() => Master.WriteMultipleRegisters(1, 1, null));
@@ -51,7 +51,7 @@ namespace NModbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => Master.WriteMultipleRegisters(1, 1, Enumerable.Repeat<ushort>(1, 124).ToArray()));
         }
 
-        [Fact]
+        [Test()]
         public void WriteMultipleCoils()
         {
             Assert.Throws<ArgumentNullException>(() => Master.WriteMultipleCoils(1, 1, null));
@@ -59,7 +59,7 @@ namespace NModbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => Master.WriteMultipleCoils(1, 1, Enumerable.Repeat(false, 1969).ToArray()));
         }
 
-        [Fact]
+        [Test()]
         public void ReadWriteMultipleRegisters()
         {
             // validate numberOfPointsToRead
@@ -72,7 +72,7 @@ namespace NModbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => Master.ReadWriteMultipleRegisters(1, 1, 1, 1, Enumerable.Repeat<ushort>(1, 122).ToArray()));
         }
 
-        [Fact]
+        [Test()]
         public void WriteFileRecord()
         {
             Assert.Throws<ArgumentNullException>(() => Master.WriteFileRecord(1, 1, 2, null));

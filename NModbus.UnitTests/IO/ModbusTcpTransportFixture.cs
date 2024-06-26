@@ -7,7 +7,7 @@ using NModbus.IO;
 using NModbus.Logging;
 using NModbus.Message;
 using NModbus.UnitTests.Message;
-using Xunit;
+
 
 namespace NModbus.UnitTests.IO
 {
@@ -15,26 +15,26 @@ namespace NModbus.UnitTests.IO
     {
         private IStreamResource StreamResourceMock => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 
-        [Fact]
+        [Test()]
         public void BuildMessageFrame()
         {
             var mock = new Mock<ModbusIpTransport>(StreamResourceMock, new ModbusFactory(),  NullModbusLogger.Instance) { CallBase = true };
             var message = new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 2, 10, 5);
 
             byte[] result = mock.Object.BuildMessageFrame(message);
-            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 6, 2, 1, 0, 10, 0, 5 }, result);
+            Assert.AreEqual(new byte[] { 0, 0, 0, 0, 0, 6, 2, 1, 0, 10, 0, 5 }, result);
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void GetMbapHeader()
         {
             var message = new WriteMultipleRegistersRequest(3, 1, MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(0, 120));
             message.TransactionId = 45;
-            Assert.Equal(new byte[] { 0, 45, 0, 0, 0, 247, 3 }, ModbusIpTransport.GetMbapHeader(message));
+            Assert.AreEqual(new byte[] { 0, 45, 0, 0, 0, 247, 3 }, ModbusIpTransport.GetMbapHeader(message));
         }
 
-        [Fact]
+        [Test()]
         public void Write()
         {
             var streamMock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -47,13 +47,13 @@ namespace NModbus.UnitTests.IO
 
             mock.Object.Write(request);
 
-            Assert.Equal(ushort.MaxValue, request.TransactionId);
+            Assert.AreEqual(ushort.MaxValue, request.TransactionId);
 
             mock.VerifyAll();
             streamMock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ReadRequestResponse()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -72,14 +72,14 @@ namespace NModbus.UnitTests.IO
                     return 6;
                 });
 
-            Assert.Equal(
+            Assert.AreEqual(
                 new byte[] { 45, 63, 0, 0, 0, 6, 1, 1, 0, 1, 0, 3 },
                 ModbusIpTransport.ReadRequestResponse(mock.Object, NullModbusLogger.Instance));
 
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ReadRequestResponse_ConnectionAbortedWhileReadingMBAPHeader()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -90,7 +90,7 @@ namespace NModbus.UnitTests.IO
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void ReadRequestResponse_ConnectionAbortedWhileReadingMessageFrame()
         {
             var mock = new Mock<IStreamResource>(MockBehavior.Strict);
@@ -103,16 +103,16 @@ namespace NModbus.UnitTests.IO
             mock.VerifyAll();
         }
 
-        [Fact]
+        [Test()]
         public void GetNewTransactionId()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(),  NullModbusLogger.Instance);
 
-            Assert.Equal(1, transport.GetNewTransactionId());
-            Assert.Equal(2, transport.GetNewTransactionId());
+            Assert.AreEqual(1, transport.GetNewTransactionId());
+            Assert.AreEqual(2, transport.GetNewTransactionId());
         }
 
-        [Fact]
+        [Test()]
         public void OnShouldRetryResponse_ReturnsTrue_IfWithinThreshold()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(),  NullModbusLogger.Instance);
@@ -126,7 +126,7 @@ namespace NModbus.UnitTests.IO
             Assert.True(transport.OnShouldRetryResponse(request, response));
         }
 
-        [Fact]
+        [Test()]
         public void OnShouldRetryResponse_ReturnsFalse_IfThresholdDisabled()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(),  NullModbusLogger.Instance);
@@ -140,7 +140,7 @@ namespace NModbus.UnitTests.IO
             Assert.False(transport.OnShouldRetryResponse(request, response));
         }
 
-        [Fact]
+        [Test()]
         public void OnShouldRetryResponse_ReturnsFalse_IfEqualTransactionId()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(), NullModbusLogger.Instance);
@@ -154,7 +154,7 @@ namespace NModbus.UnitTests.IO
             Assert.False(transport.OnShouldRetryResponse(request, response));
         }
 
-        [Fact]
+        [Test()]
         public void OnShouldRetryResponse_ReturnsFalse_IfOutsideThreshold()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(), NullModbusLogger.Instance);
@@ -168,7 +168,7 @@ namespace NModbus.UnitTests.IO
             Assert.False(transport.OnShouldRetryResponse(request, response));
         }
 
-        [Fact]
+        [Test()]
         public void ValidateResponse_MismatchingTransactionIds()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(), NullModbusLogger.Instance);
@@ -181,7 +181,7 @@ namespace NModbus.UnitTests.IO
             Assert.Throws<IOException>(() => transport.ValidateResponse(request, response));
         }
 
-        [Fact]
+        [Test()]
         public void ValidateResponse()
         {
             var transport = new ModbusIpTransport(StreamResourceMock, new ModbusFactory(), NullModbusLogger.Instance);

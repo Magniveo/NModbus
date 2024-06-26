@@ -1,25 +1,25 @@
 ﻿using System;
 using NModbus.Data;
 using NModbus.Message;
-using Xunit;
+
 
 namespace NModbus.UnitTests.Message
 {
     public class WriteMultipleRegistersRequestFixture
     {
-        [Fact]
+        [Test()]
         public void CreateWriteMultipleRegistersRequestFixture()
         {
             RegisterCollection col = new RegisterCollection(10, 20, 30, 40, 50);
             WriteMultipleRegistersRequest request = new WriteMultipleRegistersRequest(11, 34, col);
-            Assert.Equal(ModbusFunctionCodes.WriteMultipleRegisters, request.FunctionCode);
-            Assert.Equal(11, request.SlaveAddress);
-            Assert.Equal(34, request.StartAddress);
-            Assert.Equal(10, request.ByteCount);
-            Assert.Equal(col.NetworkBytes, request.Data.NetworkBytes);
+            Assert.AreEqual(ModbusFunctionCodes.WriteMultipleRegisters, request.FunctionCode);
+            Assert.AreEqual(11, request.SlaveAddress);
+            Assert.AreEqual(34, request.StartAddress);
+            Assert.AreEqual(10, request.ByteCount);
+            Assert.AreEqual(col.NetworkBytes, request.Data.NetworkBytes);
         }
 
-        [Fact]
+        [Test()]
         public void CreateWriteMultipleRegistersRequestTooMuchData()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -27,21 +27,21 @@ namespace NModbus.UnitTests.Message
                 MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(3, Modbus.MaximumRegisterRequestResponseSize + 1)));
         }
 
-        [Fact]
+        [Test()]
         public void CreateWriteMultipleRegistersRequestMaxSize()
         {
             WriteMultipleRegistersRequest request = new WriteMultipleRegistersRequest(1, 2,
                 MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(3, Modbus.MaximumRegisterRequestResponseSize));
-            Assert.Equal(Modbus.MaximumRegisterRequestResponseSize, request.NumberOfPoints);
+            Assert.AreEqual(Modbus.MaximumRegisterRequestResponseSize, request.NumberOfPoints);
         }
 
-        [Fact]
+        [Test()]
         public void ToString_WriteMultipleRegistersRequest()
         {
             RegisterCollection col = new RegisterCollection(10, 20, 30, 40, 50);
             WriteMultipleRegistersRequest request = new WriteMultipleRegistersRequest(11, 34, col);
 
-            Assert.Equal("Write 5 holding registers starting at address 34.", request.ToString());
+            Assert.AreEqual("Write 5 holding registers starting at address 34.", request.ToString());
         }
     }
 }

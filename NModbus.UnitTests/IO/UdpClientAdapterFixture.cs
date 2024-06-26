@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net.Sockets;
 using NModbus.IO;
-using Xunit;
+
 
 namespace NModbus.UnitTests.IO
 {
     public class UdpClientAdapterFixture
     {
-        [Fact]
+        [Test()]
         public void Read_ArgumentValidation()
         {
             var adapter = new UdpClientAdapter(new UdpClient());
@@ -23,7 +23,7 @@ namespace NModbus.UnitTests.IO
             Assert.Throws<ArgumentOutOfRangeException>(() => adapter.Read(new byte[2], 1, 2));
         }
 
-        [Fact]
+        [Test()]
         public void Write_ArgumentValidation()
         {
             var adapter = new UdpClientAdapter(new UdpClient());

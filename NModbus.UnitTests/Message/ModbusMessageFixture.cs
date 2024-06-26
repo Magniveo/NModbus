@@ -2,29 +2,29 @@
 using System.Linq;
 using System.Reflection;
 using NModbus.Message;
-using Xunit;
+
 
 namespace NModbus.UnitTests.Message
 {
     public class ModbusMessageFixture
     {
-        [Fact]
+        [Test()]
         public void ProtocolDataUnitReadCoilsRequest()
         {
             AbstractModbusMessage message = new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 1, 100, 9);
             byte[] expectedResult = { ModbusFunctionCodes.ReadCoils, 0, 100, 0, 9 };
-            Assert.Equal(expectedResult, message.ProtocolDataUnit);
+            Assert.AreEqual(expectedResult, message.ProtocolDataUnit);
         }
 
-        [Fact]
+        [Test()]
         public void MessageFrameReadCoilsRequest()
         {
             AbstractModbusMessage message = new ReadCoilsInputsRequest(ModbusFunctionCodes.ReadCoils, 1, 2, 3);
             byte[] expectedMessageFrame = { 1, ModbusFunctionCodes.ReadCoils, 0, 2, 0, 3 };
-            Assert.Equal(expectedMessageFrame, message.MessageFrame);
+            Assert.AreEqual(expectedMessageFrame, message.MessageFrame);
         }
 
-        [Fact]
+        [Test()]
         public void ModbusMessageToStringOverriden()
         {
             var messageTypes = from message in typeof(AbstractModbusMessage).GetTypeInfo().Assembly.GetTypes()
@@ -46,10 +46,10 @@ namespace NModbus.UnitTests.Message
 
         internal static void AssertModbusMessagePropertiesAreEqual(IModbusMessage obj1, IModbusMessage obj2)
         {
-            Assert.Equal(obj1.FunctionCode, obj2.FunctionCode);
-            Assert.Equal(obj1.SlaveAddress, obj2.SlaveAddress);
-            Assert.Equal(obj1.MessageFrame, obj2.MessageFrame);
-            Assert.Equal(obj1.ProtocolDataUnit, obj2.ProtocolDataUnit);
+            Assert.AreEqual(obj1.FunctionCode, obj2.FunctionCode);
+            Assert.AreEqual(obj1.SlaveAddress, obj2.SlaveAddress);
+            Assert.AreEqual(obj1.MessageFrame, obj2.MessageFrame);
+            Assert.AreEqual(obj1.ProtocolDataUnit, obj2.ProtocolDataUnit);
         }
     }
 }

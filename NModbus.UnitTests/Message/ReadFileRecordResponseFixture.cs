@@ -1,32 +1,32 @@
 ﻿using System;
 using NModbus.Data;
 using NModbus.Message;
-using Xunit;
+
 
 namespace NModbus.UnitTests.Message
 {
     public class ReadFileRecordResponseFixture
     {
-        [Fact]
+        [Test()]
         public void Create()
         {
             var response = new WriteFileRecordResponse(17);
-            Assert.Equal(ModbusFunctionCodes.WriteFileRecord, response.FunctionCode);
-            Assert.Equal(17, response.SlaveAddress);
+            Assert.AreEqual(ModbusFunctionCodes.WriteFileRecord, response.FunctionCode);
+            Assert.AreEqual(17, response.SlaveAddress);
         }
 
-        [Fact]
+        [Test()]
         public void CreateWithData()
         {
             var response = new WriteFileRecordResponse(17, new FileRecordCollection(1, 2, new byte[] { 4, 5 }));
-            Assert.Equal(ModbusFunctionCodes.WriteFileRecord, response.FunctionCode);
-            Assert.Equal(17, response.SlaveAddress);
-            Assert.Equal(1, response.Data.FileNumber);
-            Assert.Equal(2, response.Data.StartingAddress);
-            Assert.Equal(new byte[] { 4, 5 }, response.Data.DataBytes);
+            Assert.AreEqual(ModbusFunctionCodes.WriteFileRecord, response.FunctionCode);
+            Assert.AreEqual(17, response.SlaveAddress);
+            Assert.AreEqual(1, response.Data.FileNumber);
+            Assert.AreEqual(2, response.Data.StartingAddress);
+            Assert.AreEqual(new byte[] { 4, 5 }, response.Data.DataBytes);
         }
 
-        [Fact]
+        [Test()]
         public void Initialize()
         {
             var response = new WriteFileRecordResponse();
@@ -34,19 +34,19 @@ namespace NModbus.UnitTests.Message
                 17, ModbusFunctionCodes.WriteFileRecord, 9, 6, 0, 1, 0, 2, 0, 1, 4, 5
             });
 
-            Assert.Equal(ModbusFunctionCodes.WriteFileRecord, response.FunctionCode);
-            Assert.Equal(17, response.SlaveAddress);
-            Assert.Equal(1, response.Data.FileNumber);
-            Assert.Equal(2, response.Data.StartingAddress);
-            Assert.Equal(new byte[] { 4, 5 }, response.Data.DataBytes);
+            Assert.AreEqual(ModbusFunctionCodes.WriteFileRecord, response.FunctionCode);
+            Assert.AreEqual(17, response.SlaveAddress);
+            Assert.AreEqual(1, response.Data.FileNumber);
+            Assert.AreEqual(2, response.Data.StartingAddress);
+            Assert.AreEqual(new byte[] { 4, 5 }, response.Data.DataBytes);
         }
 
-        [Fact]
+        [Test()]
         public void ToString_Test()
         {
             var response = new WriteFileRecordResponse(17, new FileRecordCollection(1, 2, new byte[] { 4, 5 }));
 
-            Assert.Equal("Wrote 2 bytes for file 1 starting at address 2.", response.ToString());
+            Assert.AreEqual("Wrote 2 bytes for file 1 starting at address 2.", response.ToString());
         }
     }
 }

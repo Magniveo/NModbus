@@ -1,53 +1,52 @@
 ﻿using System;
 using System.Linq;
 using NModbus.Data;
-using Xunit;
 
 namespace NModbus.UnitTests.Data
 {
     public class DiscreteCollectionFixture
     {
-        [Fact]
+        [Test()]
         public void ByteCount()
         {
             DiscreteCollection col = new DiscreteCollection(true, true, false, false, false, false, false, false, false);
-            Assert.Equal(2, col.ByteCount);
+            Assert.AreEqual(2, col.ByteCount);
         }
 
-        [Fact]
+        [Test()]
         public void ByteCountEven()
         {
             DiscreteCollection col = new DiscreteCollection(true, true, false, false, false, false, false, false);
-            Assert.Equal(1, col.ByteCount);
+            Assert.AreEqual(1, col.ByteCount);
         }
 
-        [Fact]
+        [Test()]
         public void NetworkBytes()
         {
             DiscreteCollection col = new DiscreteCollection(true, true);
-            Assert.Equal(new byte[] { 3 }, col.NetworkBytes);
+            Assert.AreEqual(new byte[] { 3 }, col.NetworkBytes);
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionInitialize()
         {
             DiscreteCollection col = new DiscreteCollection(true, true, true);
-            Assert.Equal(3, col.Count);
-            Assert.DoesNotContain(false, col);
+            Assert.AreEqual(3, col.Count);
+            Assert.Contains(false, col);
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionFromBoolParams()
         {
             DiscreteCollection col = new DiscreteCollection(true, false, true);
-            Assert.Equal(3, col.Count);
+            Assert.AreEqual(3, col.Count);
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionFromBytesParams()
         {
             DiscreteCollection col = new DiscreteCollection(1, 2, 3);
-            Assert.Equal(24, col.Count);
+            Assert.AreEqual(24, col.Count);
             var expected = new bool[]
             {
                 true, false, false, false, false, false, false, false,
@@ -55,66 +54,66 @@ namespace NModbus.UnitTests.Data
                 true, true, false, false, false, false, false, false,
             };
 
-            Assert.Equal(expected, col);
+            Assert.AreEqual(expected, col);
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionFromBytesParams_ZeroLengthArray()
         {
             DiscreteCollection col = new DiscreteCollection(new byte[0]);
-            Assert.Empty(col);
+            Assert.IsEmpty(col);
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionFromBytesParams_NullArray()
         {
             Assert.Throws<ArgumentNullException>(() => new DiscreteCollection((byte[])null));
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionFromBytesParamsOrder()
         {
             DiscreteCollection col = new DiscreteCollection(194);
-            Assert.Equal(new bool[] { false, true, false, false, false, false, true, true }, col.ToArray());
+            Assert.AreEqual(new bool[] { false, true, false, false, false, false, true, true }, col.ToArray());
         }
 
-        [Fact]
+        [Test()]
         public void CreateNewDiscreteCollectionFromBytesParamsOrder2()
         {
             DiscreteCollection col = new DiscreteCollection(157, 7);
-            Assert.Equal(
+            Assert.AreEqual(
                 new bool[]
                 { true, false, true, true, true, false, false, true, true, true, true, false, false, false, false, false },
                 col.ToArray());
         }
 
-        [Fact]
+        [Test()]
         public void Resize()
         {
             DiscreteCollection col = new DiscreteCollection(byte.MaxValue, byte.MaxValue);
-            Assert.Equal(16, col.Count);
+            Assert.AreEqual(16, col.Count);
             col.RemoveAt(3);
-            Assert.Equal(15, col.Count);
+            Assert.AreEqual(15, col.Count);
         }
 
-        [Fact]
+        [Test()]
         public void BytesPersistence()
         {
             DiscreteCollection col = new DiscreteCollection(byte.MaxValue, byte.MaxValue);
-            Assert.Equal(16, col.Count);
+            Assert.AreEqual(16, col.Count);
             byte[] originalBytes = col.NetworkBytes;
             col.RemoveAt(3);
-            Assert.Equal(15, col.Count);
-            Assert.NotEqual(originalBytes, col.NetworkBytes);
+            Assert.AreEqual(15, col.Count);
+            Assert.AreNotEqual(originalBytes, col.NetworkBytes);
         }
 
-        [Fact]
+        [Test()]
         public void AddCoil()
         {
             DiscreteCollection col = new DiscreteCollection();
-            Assert.Empty(col);
+            Assert.IsEmpty(col);
             col.Add(true);
-            Assert.Single(col);
+            Assert.That(col, Has.Exactly(1).Items);
         }
     }
 }
