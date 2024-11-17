@@ -47,12 +47,6 @@ namespace NModbus.Serial
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            //var bytesRead =  ReadAsync(buffer, offset, count,_serialPort.ReadTimeout).Result;
-            //return bytesRead;
-            //Task.Run(() => {Thread.Sleep(100) ;});
-            //return _serialPort.BaseStream.Read(buffer, offset, count);
-            //return (int)_serialPort.BaseStream?.Read(buffer, offset, count);
-            //_serialPort.BaseStream.BeginRead(buffer, offset, count)
             return _serialPort.BaseStream.Read(buffer, offset, count);
         }
 
@@ -61,12 +55,12 @@ namespace NModbus.Serial
             await Task.Delay(50);
             CancellationTokenSource cts = new CancellationTokenSource(_serialPort.ReadTimeout);
             //var task = await _serialPort.BaseStream.ReadAsync(buffer, offset, count);
-            Task<int> readTask = Task.Run(async () =>
+            var readTask = Task.Run(async () =>
             {
                 return await _serialPort.BaseStream.ReadAsync(buffer, offset, count, cts.Token);
             }, cts.Token);
 
-            Task completedTask = await Task.WhenAny(readTask, Task.Delay(_serialPort.ReadTimeout, cts.Token));
+            var completedTask = await Task.WhenAny(readTask, Task.Delay(_serialPort.ReadTimeout, cts.Token));
             if (completedTask == readTask)
             {
                 return await readTask;
@@ -96,10 +90,10 @@ namespace NModbus.Serial
                 cts.Token.ThrowIfCancellationRequested();
 
                 // Otherwise, return the number of bytes read
-                var bytesRead  = await readTask;
+                //var bytesRead  = await readTask;
 
                 //await _serialPort.BaseStream.FlushAsync();
-                return bytesRead;
+                return await readTask;
             }
             catch (OperationCanceledException)
             {
